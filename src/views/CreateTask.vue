@@ -11,7 +11,7 @@
     </div>
   </template>
   <script>
-    import { db } from '../firebaseConfig'; // Assurez-vous que le chemin d'accès est correct
+    import { db } from '../firebaseConfig';
     import { ref, set } from "firebase/database";
   
   export default {
@@ -89,8 +89,6 @@
 
   .create-task form button {
       padding: 10px 20px;
-      /* background-color: #007bff; */
-      /* color: white; */
       border: none;
       border-radius: 5px;
       cursor: pointer;
