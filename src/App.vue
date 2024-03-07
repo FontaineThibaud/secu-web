@@ -1,8 +1,15 @@
 <template>
   <nav>
-    <router-link to="/">Accueil</router-link>
-    <router-link to="/about">À Propos</router-link>
-    <router-link to="/create">Créer Tâche</router-link>
+    <div v-if="isConnected">
+      <router-link to="/">Accueil</router-link>
+      <router-link to="/about">À Propos</router-link>
+      <router-link to="/create">Créer Tâche</router-link>
+      <button @click="signOut">Déconnexion</button>
+    </div>
+    <div v-else>
+      <router-link to="/login">Connexion</router-link>
+      <router-link to="/register">Inscription</router-link>
+    </div>
     <label class="switch">
       <input type="checkbox" @change="toggleTheme" :checked="isDarkTheme">
       <span class="slider"></span>
@@ -13,19 +20,17 @@
 <script>
 import Cookies from 'js-cookie';
 import "./App.css"
+import { getAuth, signOut } from "firebase/auth";
 
 export default {
   name: 'App',
   data() {
     return {
       isDarkTheme: Cookies.get('theme') === 'dark',
+      isConnected: localStorage.getItem('user') !== null,
     };
   },
   mounted() {
-    if (!localStorage.getItem('userId')) {
-      const userId = crypto.randomUUID(); // identifiant unique pour l'utilisateur
-      localStorage.setItem('userId', userId);
-    }
     if (!Cookies.get('theme')) {
       const defaultTheme = 'light';
       Cookies.set('theme', defaultTheme);
@@ -42,7 +47,18 @@ export default {
     applyTheme() {
       const theme = Cookies.get('theme');
       document.body.className = theme;
-    }
+    },
+    async signOut() {
+      const auth = getAuth();
+      try {
+        await signOut(auth);
+        console.log("User signed out");
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
   },
 };
 </script>

@@ -30,6 +30,7 @@
 <script>
 import { db } from '../firebaseConfig';
 import { ref, onValue, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
 
 export default {
     name: 'HomeView',
@@ -39,7 +40,7 @@ export default {
         };
     },
     mounted() {
-        const tasks = ref(db, 'tasks/' + localStorage.getItem('userId'));
+        const tasks = ref(db, 'tasks/' + localStorage.getItem('user'));
         onValue(tasks, (snapshot) => {
             const data = snapshot.val()
             if (data)
@@ -47,18 +48,19 @@ export default {
             else
                 this.tasks = []
         })
+        console.log(getAuth());
     },
     methods: {
         async updateTask(task) {
             try {
-                await set(ref(db, 'tasks/' + localStorage.getItem('userId') + '/' + task.id), task);
+                await set(ref(db, 'tasks/' + localStorage.getItem('user') + '/' + task.id), task);
             } catch (e) {
                 console.error("Error updating task: ", e);
             }
         },
         async deleteTask(taskId) {
             try {
-                await set(ref(db, 'tasks/' + localStorage.getItem('userId') + '/' + taskId), null);
+                await set(ref(db, 'tasks/' + localStorage.getItem('user') + '/' + taskId), null);
             } catch (e) {
                 console.error("Error deleting task: ", e);
             }

@@ -31,7 +31,7 @@
         }
         try {
             const id = crypto.randomUUID();
-            set(ref(db, 'tasks/'+ localStorage.getItem("userId") + '/' + id), {
+            set(ref(db, 'tasks/'+ localStorage.getItem('user') + '/' + id), {
                 id: id,
                 title: this.taskTitle,
                 done: false
